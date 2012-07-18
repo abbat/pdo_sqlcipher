@@ -20,5 +20,5 @@ SQLCipher
 
 SQLCipher является расширением SQLite, которое реализует прозрачное шифрование файлов данных посредством AES-256. Страницы базы данных шифруются перед записью на диск и расшифровываются при чтении.
 
-Официальный сайт: http://sqlcipher.net
-Репозиторий кода: https://github.com/sqlcipher/sqlcipher
+* Официальный сайт: http://sqlcipher.net
+* Репозиторий кода: https://github.com/sqlcipher/sqlcipher
