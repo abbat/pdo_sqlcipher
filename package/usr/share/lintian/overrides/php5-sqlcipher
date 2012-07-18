@@ -1,0 +1,7 @@
+php5-sqlcipher: debian-changelog-file-missing
+php5-sqlcipher: hardening-no-relro
+php5-sqlcipher: copyright-without-copyright-notice
+php5-sqlcipher: binary-or-shlib-defines-rpath
+php5-sqlcipher: embedded-library
+php5-sqlcipher: hardening-no-fortify-functions
+php5-sqlcipher: binary-without-manpage

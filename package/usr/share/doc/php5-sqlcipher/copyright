@@ -1,0 +1,4 @@
+This package was debianized by Anton Batenev <antonbatenev@yandex.ru>
+
+pdo_sqlite under PHP License (http://www.php.net/license/3_0.txt)
+sqlcipher under BSD-style open source license (http://sqlcipher.net/license)

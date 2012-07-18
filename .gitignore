@@ -1,0 +1,11 @@
+build/*
+release/*
+sqlcipher.git/*
+php-*/*
+
+package/DEBIAN/md5sums
+package/usr/bin/*
+package/usr/lib/*
+
+*.tar.gz
+*.deb
