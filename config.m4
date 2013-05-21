@@ -25,9 +25,9 @@ if test "$PHP_PDO_SQLCIPHER" != "no"; then
     fi
     AC_MSG_RESULT($pdo_inc_path)
 
-    php_pdo_sqlcipher_sources_core="pdo_sqlcipher.c sqlite_driver.c sqlite_statement.c sqlcipher/sqlite3.c"
+    php_pdo_sqlcipher_sources_core="pdo_sqlcipher.c sqlite_driver.c sqlite_statement.c sqlite3.c"
 
-    PHP_NEW_EXTENSION(pdo_sqlcipher, $php_pdo_sqlcipher_sources_core, $ext_shared,,-I$pdo_inc_path -Isqlcipher)
+    PHP_NEW_EXTENSION(pdo_sqlcipher, $php_pdo_sqlcipher_sources_core, $ext_shared,,-I$pdo_inc_path)
 
     ifdef([PHP_ADD_EXTENSION_DEP],
     [

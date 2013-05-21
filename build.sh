@@ -1,6 +1,27 @@
 #!/bin/sh
 
 #
+# SQLite3 compile options
+#
+
+CFLAGS=" \
+	-DSQLITE_HAS_CODEC \
+	-DSQLITE_ENABLE_UPDATE_DELETE_LIMIT \
+	-DSQLITE_ENABLE_COLUMN_METADATA \
+	-DSQLITE_ENABLE_STAT3 \
+	-DSQLITE_ENABLE_RTREE \
+	-DSQLITE_ENABLE_FTS3 \
+	-DSQLITE_ENABLE_FTS3_PARENTHESIS \
+	-DSQLITE_ENABLE_FTS4 \
+	-DSQLITE_SECURE_DELETE \
+	-DSQLITE_ENABLE_ICU \
+	-DSQLITE_SOUNDEX \
+	-DSQLITE_DEFAULT_FOREIGN_KEYS=1 \
+	-I/usr/local/include"
+
+LDFLAGS="-lcrypto -licuuc -licui18n -L/usr/local/lib"
+
+#
 # Get PHP source code (installed version)
 #
 
@@ -62,21 +83,8 @@ if [ ! -f "${SQLCIPHER_SRC}/sqlite3.c" ]; then
 	./configure \
 		--disable-shared \
 		--enable-tempstore=yes \
-		CFLAGS=" \
-			-DSQLITE_HAS_CODEC \
-			-DSQLITE_ENABLE_UPDATE_DELETE_LIMIT \
-			-DSQLITE_ENABLE_COLUMN_METADATA \
-			-DSQLITE_ENABLE_STAT3 \
-			-DSQLITE_ENABLE_RTREE \
-			-DSQLITE_ENABLE_FTS3 \
-			-DSQLITE_ENABLE_FTS3_PARENTHESIS \
-			-DSQLITE_ENABLE_FTS4 \
-			-DSQLITE_SECURE_DELETE \
-			-DSQLITE_ENABLE_ICU \
-			-DSQLITE_SOUNDEX \
-			-DSQLITE_DEFAULT_FOREIGN_KEYS=1 \
-			-I/usr/local/include" \
-		LDFLAGS="-lcrypto -licuuc -licui18n -L/usr/local/lib"
+		CFLAGS="${CFLAGS}" \
+		LDFLAGS="${LDFLAGS}"
 	if [ $? -ne 0 ]; then
 		exit $?
 	fi
@@ -148,7 +156,12 @@ done
 # Build pdo_sqlcipher
 #
 
-cp -r "${SQLCIPHER_SRC}" "${BUILD_DIR}/sqlcipher"
+cp "${SQLCIPHER_SRC}/sqlite3.c" "${BUILD_DIR}/sqlite3.c"
+if [ $? -ne 0 ]; then
+	exit $?
+fi
+
+cp "${SQLCIPHER_SRC}/sqlite3.h" "${BUILD_DIR}/sqlite3.h"
 if [ $? -ne 0 ]; then
 	exit $?
 fi
@@ -170,7 +183,9 @@ if [ $? -ne 0 ]; then
 	exit $?
 fi
 
-./configure
+./configure \
+	CFLAGS="${CFLAGS}" \
+	LDFLAGS="${LDFLAGS}"
 if [ $? -ne 0 ]; then
 	exit $?
 fi
