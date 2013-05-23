@@ -1,24 +1,57 @@
 PDO SQLCipher
-============
+=============
 
-Драйвер, реализующий интерфейс PDO (PHP Data Objects) для SQLCipher без замещения оригинальной версии PDO SQLite или системной версии SQLite. Основан на оригинальном коде PDO SQLite путем простого замещения имен и встраиванием кода SQLCipher (вместо динамической линковки с библиотеками SQLite).
+Драйвер, реализующий интерфейс [PDO](http://php.net/manual/en/book.pdo.php) (PHP Data Objects) для [SQLCipher](http://sqlcipher.net) без замещения оригинальной версии PDO SQLite или системной версии [SQLite](http://www.sqlite.org/). Основан на оригинальном коде PDO SQLite путем простого замещения имен и встраиванием кода SQLCipher (вместо динамической линковки с библиотеками SQLite).
 
 Подобное разделение позволяет работать с шифрованными базами только тем приложениям, которые в этом явно нуждаются не опасаясь потери данных или замедления работы остальнх приложений.
 
-Скрипт сборки протестирован на Debian Squeeze (PHP 5.3.3) и FreeBSD 8.2 (PHP 5.4.3)
+Сборка
+======
 
-Для сборки под Debain потребуются (помимо стандартных) следующие dev пакеты:
+Для сборки расширения запустите скрипт `build.sh`. После успешной сборки необходимые файлы будут помещены в директорию `release`:
 
-* libicu-dev
-* libreadline-dev
-* libssl-dev
-* php5-dev
-* tcl-dev
+* `sqlcipher` - консольный клиент (аналогичный клиенту `sqlite3`)
+* `pdo_sqlcipher.so` - расширение php (аналогичное расширению `pdo_sqlite.so`)
 
-SQLCipher
+Для сборки под Debain могут потребоваться (помимо стандартных) следующие dev пакеты:
+
+* `libicu-dev`
+* `libreadline-dev`
+* `libssl-dev`
+* `php5-dev`
+* `tcl-dev`
+
+Для сборки под RHEL могут потребоваться (помимо стандартных) следующие dev пакеты:
+
+* `libicu-devel`
+* `readline-devel`
+* `openssl-devel`
+* `php-devel`
+* `tcl-devel`
+
+Для сборки под FreeBSD может потребоваться установка порта `lang/tcl-wrapper` (для поддержки `tclsh`).
+
+Скрипт сборки протестирован на Debian Wheezy (PHP 5.4.4-14) и FreeBSD 9.1 (PHP 5.4.13)
+
+Установка
 =========
 
-SQLCipher является расширением SQLite, которое реализует прозрачное шифрование файлов данных посредством AES-256. Страницы базы данных шифруются перед записью на диск и расшифровываются при чтении.
+Для установки расширения скопируйте файлы из директории `release`:
 
-* Официальный сайт: http://sqlcipher.net
-* Репозиторий кода: https://github.com/sqlcipher/sqlcipher
+* `sqlcipher` в директорию `/usr/local/bin/`
+* `pdo_sqlcipher.so` в директорию модулей php (зависит от дистрибутива):
+  * Debian:  `/usr/lib/php5/20100525/`
+  * RHEL:    `/usr/lib64/php/modules/`
+  * FreeBSD: `/usr/local/lib/php/20100525/`
+
+И подключите расширение php:
+
+```
+extension=pdo_sqlcipher.so
+```
+
+* Debian:  `/etc/php5/conf.d/pdo_sqlcipher.ini`
+* RHEL:    `/etc/php.d/pdo_sqlcipher.ini`
+* FreeBSD: `/usr/local/etc/php/usr/local/etc/php/extensions.ini`
+
+Пример использования расширения можно найти в файле `example.php` репозитория.
