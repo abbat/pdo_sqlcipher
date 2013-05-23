@@ -7,12 +7,12 @@ if [ $? -ne 0 ]; then
 	exit $?
 fi
 
-mkdir -p package/usr/lib/php5/20090626
+mkdir -p package/usr/lib/php5/20100525
 if [ $? -ne 0 ]; then
 	exit $?
 fi
 
-cp "${RELEASE_DIR}/pdo_sqlcipher.so" package/usr/lib/php5/20090626/
+cp "${RELEASE_DIR}/pdo_sqlcipher.so" package/usr/lib/php5/20100525/
 if [ $? -ne 0 ]; then
 	exit $?
 fi
