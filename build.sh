@@ -118,29 +118,33 @@ fi
 PDO_SQLITE="${PHP_SRC}/ext/pdo_sqlite"
 
 cp "${PDO_SQLITE}/"*.c "${PDO_SQLITE}"/*.h "${BUILD_DIR}/"
+if [ $? -ne 0 ]; then
+	exit $?
+fi
+
+cp "${SQLCIPHER_SRC}/sqlite3.c" "${BUILD_DIR}/sqlite3.c"
+if [ $? -ne 0 ]; then
+	exit $?
+fi
+
+cp "${SQLCIPHER_SRC}/sqlite3.h" "${BUILD_DIR}/sqlite3.h"
+if [ $? -ne 0 ]; then
+	exit $?
+fi
 
 # magic :)
 for FILE in "${BUILD_DIR}"/*
 do
 	cat "${FILE}" | \
-		sed -e 's/<sqlite3.h>/"sqlite3.h"/g'                            | \
-		sed -e 's/pdo_sqlite/pdo_sqlcipher/g'                           | \
-		sed -e 's/php_sqlite3/php_sqlcipher/g'                          | \
-		sed -e 's/sqlite_handle_/sqlcipher_handle_/g'                   | \
-		sed -e 's/sqlite_stmt_methods/sqlcipher_stmt_methods/g'         | \
-		sed -e 's/sqlite_methods/sqlcipher_methods/g'                   | \
-		sed -e 's/SQLite/SQLCipher/g'                                   | \
-		sed -e 's/sqliteCreate/sqlcipherCreate/g'                       | \
-		sed -e 's/PDO_SQLITE/PDO_SQLCIPHER/g'                           | \
-		sed -e 's/HEADER(sqlite)/HEADER(sqlcipher)/g'                   | \
-		sed -e 's/PDO Driver for SQLite 3.x/PDO Driver for SQLCipher/g' | \
-		sed -e 's/SQLite Library/SQLCipher Library/g'                   > \
+		sed -e 's/sqlite/sqlcipher/g' | \
+		sed -e 's/SQLite/SQLCipher/g' | \
+		sed -e 's/SQLITE/SQLCIPHER/g' > \
 		"${FILE}.tmp"
 	if [ $? -ne 0 ]; then
 		exit $?
 	fi
 
-	NEW_FILE=$(echo ${FILE} | sed 's/pdo_sqlite/pdo_sqlcipher/')
+	NEW_FILE=$(echo ${FILE} | sed 's/sqlite/sqlcipher/')
 
 	mv "${FILE}.tmp" "${NEW_FILE}"
 	if [ $? -ne 0 ]; then
@@ -159,16 +163,6 @@ done
 # Build pdo_sqlcipher
 #
 
-cp "${SQLCIPHER_SRC}/sqlite3.c" "${BUILD_DIR}/sqlite3.c"
-if [ $? -ne 0 ]; then
-	exit $?
-fi
-
-cp "${SQLCIPHER_SRC}/sqlite3.h" "${BUILD_DIR}/sqlite3.h"
-if [ $? -ne 0 ]; then
-	exit $?
-fi
-
 cp "config.m4" "${BUILD_DIR}/config.m4"
 if [ $? -ne 0 ]; then
 	exit $?
@@ -185,6 +179,8 @@ phpize
 if [ $? -ne 0 ]; then
 	exit $?
 fi
+
+CFLAGS=$(echo "${CFLAGS}" | sed -e 's/SQLITE/SQLCIPHER/g')
 
 ./configure \
 	CFLAGS="${CFLAGS}" \
