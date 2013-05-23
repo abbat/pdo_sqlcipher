@@ -128,6 +128,9 @@ do
 		sed -e 's/php_sqlite3/php_sqlcipher/g'                          | \
 		sed -e 's/sqlite_handle_/sqlcipher_handle_/g'                   | \
 		sed -e 's/sqlite_stmt_methods/sqlcipher_stmt_methods/g'         | \
+		sed -e 's/sqlite_methods/sqlcipher_methods/g'                   | \
+		sed -e 's/SQLite/SQLCipher/g'                                   | \
+		sed -e 's/sqliteCreate/sqlcipherCreate/g'                       | \
 		sed -e 's/PDO_SQLITE/PDO_SQLCIPHER/g'                           | \
 		sed -e 's/HEADER(sqlite)/HEADER(sqlcipher)/g'                   | \
 		sed -e 's/PDO Driver for SQLite 3.x/PDO Driver for SQLCipher/g' | \
