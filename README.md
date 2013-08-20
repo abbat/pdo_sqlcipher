@@ -51,6 +51,6 @@ extension=pdo_sqlcipher.so
 
 * Debian:  `/etc/php5/conf.d/pdo_sqlcipher.ini`
 * RHEL:    `/etc/php.d/pdo_sqlcipher.ini`
-* FreeBSD: `/usr/local/etc/php/usr/local/etc/php/extensions.ini`
+* FreeBSD: `/usr/local/etc/php/extensions.ini`
 
 Пример использования расширения можно найти в файле `example.php` репозитория.
