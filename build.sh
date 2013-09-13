@@ -157,12 +157,26 @@ done
 
 # magic for sqlite3 api sources
 cp "${SQLCIPHER_SRC}/sqlite3.c" "${BUILD_DIR}/sqlcipher3.c"
+if [ $? -ne 0 ]; then
+	exit $?
+fi
+
 cp "${SQLCIPHER_SRC}/sqlite3.h" "${BUILD_DIR}/sqlcipher3.h"
+if [ $? -ne 0 ]; then
+	exit $?
+fi
 
 for FILE in "${BUILD_DIR}"/sqlcipher3.*
 do
-	sed -rie 's/sqlite3/sqlcipher3/g' "${FILE}"
+	sed -ie 's/sqlite3/sqlcipher3/g' "${FILE}"
+	if [ $? -ne 0 ]; then
+		exit $?
+	fi
+
 	sed -rie 's/(".*)sqlcipher3(.*")/\1sqlite3\2/g' "${FILE}"
+	if [ $? -ne 0 ]; then
+		exit $?
+	fi
 done
 
 #
