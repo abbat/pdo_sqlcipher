@@ -122,29 +122,25 @@ if [ $? -ne 0 ]; then
 	exit $?
 fi
 
-cp "${SQLCIPHER_SRC}/sqlite3.c" "${BUILD_DIR}/sqlite3.c"
-if [ $? -ne 0 ]; then
-	exit $?
-fi
-
-cp "${SQLCIPHER_SRC}/sqlite3.h" "${BUILD_DIR}/sqlite3.h"
-if [ $? -ne 0 ]; then
-	exit $?
-fi
-
 # magic :)
 for FILE in "${BUILD_DIR}"/*
 do
 	cat "${FILE}" | \
-		sed -e 's/sqlite/sqlcipher/g' | \
-		sed -e 's/SQLite/SQLCipher/g' | \
-		sed -e 's/SQLITE/SQLCIPHER/g' > \
+		sed -e 's/<sqlite3.h>/"sqlcipher3.h"/g'                         | \
+		sed -e 's/pdo_sqlite/pdo_sqlcipher/g'                           | \
+		sed -e 's/php_sqlite3/php_sqlcipher/g'                          | \
+		sed -e 's/sqlite_handle_/sqlcipher_handle_/g'                   | \
+		sed -e 's/sqlite_stmt_methods/sqlcipher_stmt_methods/g'         | \
+		sed -e 's/PDO_SQLITE/PDO_SQLCIPHER/g'                           | \
+		sed -e 's/HEADER(sqlite)/HEADER(sqlcipher)/g'                   | \
+		sed -e 's/PDO Driver for SQLite 3.x/PDO Driver for SQLCipher/g' | \
+		sed -e 's/SQLite Library/SQLCipher Library/g'                   > \
 		"${FILE}.tmp"
 	if [ $? -ne 0 ]; then
 		exit $?
 	fi
 
-	NEW_FILE=$(echo ${FILE} | sed 's/sqlite/sqlcipher/')
+	NEW_FILE=$(echo ${FILE} | sed 's/_sqlite/_sqlcipher/')
 
 	mv "${FILE}.tmp" "${NEW_FILE}"
 	if [ $? -ne 0 ]; then
@@ -158,6 +154,17 @@ do
 		fi
 	fi
 done
+
+# copy unmodified sqlite sources
+cp "${SQLCIPHER_SRC}/sqlite3.c" "${BUILD_DIR}/sqlcipher3.c"
+if [ $? -ne 0 ]; then
+	exit $?
+fi
+
+cp "${SQLCIPHER_SRC}/sqlite3.h" "${BUILD_DIR}/sqlcipher3.h"
+if [ $? -ne 0 ]; then
+	exit $?
+fi
 
 #
 # Build pdo_sqlcipher
@@ -179,8 +186,6 @@ phpize
 if [ $? -ne 0 ]; then
 	exit $?
 fi
-
-CFLAGS=$(echo "${CFLAGS}" | sed -e 's/SQLITE/SQLCIPHER/g')
 
 ./configure \
 	CFLAGS="${CFLAGS}" \
@@ -231,7 +236,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # sqlcipher static binary
-cp "${SQLCIPHER_SRC}/sqlite3" "${RELEASE_DIR}/sqlcipher"
+cp "${SQLCIPHER_SRC}/sqlcipher" "${RELEASE_DIR}/sqlcipher"
 if [ $? -ne 0 ]; then
 	exit $?
 fi
