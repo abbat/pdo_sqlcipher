@@ -73,3 +73,23 @@ if ($result === false) {
 foreach ($result as $row) {
 	print_r($row);
 }
+
+// alter table
+$sql = "ALTER TABLE `test` RENAME TO `test2`";
+
+if ($pdo->exec($sql) === false) {
+	$error = $pdo->errorInfo();
+	die($error[0] . ": " . $error[2] . PHP_EOL);
+}
+
+// select rows
+$result = $pdo->query("SELECT * FROM `test2`");
+
+if ($result === false) {
+	$error = $pdo->errorInfo();
+	die($error[0] . ": " . $error[2] . PHP_EOL);
+}
+
+foreach ($result as $row) {
+	print_r($row);
+}

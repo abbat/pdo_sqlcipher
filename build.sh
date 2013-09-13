@@ -17,9 +17,15 @@ CFLAGS=" \
 	-DSQLITE_ENABLE_ICU \
 	-DSQLITE_SOUNDEX \
 	-DSQLITE_DEFAULT_FOREIGN_KEYS=1 \
-	-I/usr/local/include"
+	-I. -I/usr/local/include"
 
 LDFLAGS="-lcrypto -licuuc -licui18n -L/usr/local/lib"
+
+# fix FreeBSD include
+UNAME=$(uname)
+if [ "x${UNAME}" = "xFreeBSD" ]; then
+	CFLAGS="${CFLAGS} -include /usr/include/sys/stat.h"
+fi
 
 #
 # Get PHP source code (installed version)
@@ -126,21 +132,15 @@ fi
 for FILE in "${BUILD_DIR}"/*
 do
 	cat "${FILE}" | \
-		sed -e 's/<sqlite3.h>/"sqlcipher3.h"/g'                         | \
-		sed -e 's/pdo_sqlite/pdo_sqlcipher/g'                           | \
-		sed -e 's/php_sqlite3/php_sqlcipher/g'                          | \
-		sed -e 's/sqlite_handle_/sqlcipher_handle_/g'                   | \
-		sed -e 's/sqlite_stmt_methods/sqlcipher_stmt_methods/g'         | \
-		sed -e 's/PDO_SQLITE/PDO_SQLCIPHER/g'                           | \
-		sed -e 's/HEADER(sqlite)/HEADER(sqlcipher)/g'                   | \
-		sed -e 's/PDO Driver for SQLite 3.x/PDO Driver for SQLCipher/g' | \
-		sed -e 's/SQLite Library/SQLCipher Library/g'                   > \
+		sed -e 's/sqlite/sqlcipher/g'         | \
+		sed -e 's/SQLite/SQLCipher/g'         | \
+		sed -e 's/PDO_SQLITE/PDO_SQLCIPHER/g' > \
 		"${FILE}.tmp"
 	if [ $? -ne 0 ]; then
 		exit $?
 	fi
 
-	NEW_FILE=$(echo ${FILE} | sed 's/_sqlite/_sqlcipher/')
+	NEW_FILE=$(echo ${FILE} | sed 's/sqlite/sqlcipher/')
 
 	mv "${FILE}.tmp" "${NEW_FILE}"
 	if [ $? -ne 0 ]; then
@@ -155,16 +155,15 @@ do
 	fi
 done
 
-# copy unmodified sqlite sources
+# magic for sqlite3 api sources
 cp "${SQLCIPHER_SRC}/sqlite3.c" "${BUILD_DIR}/sqlcipher3.c"
-if [ $? -ne 0 ]; then
-	exit $?
-fi
-
 cp "${SQLCIPHER_SRC}/sqlite3.h" "${BUILD_DIR}/sqlcipher3.h"
-if [ $? -ne 0 ]; then
-	exit $?
-fi
+
+for FILE in "${BUILD_DIR}"/sqlcipher3.*
+do
+	sed -rie 's/sqlite3/sqlcipher3/g' "${FILE}"
+	sed -rie 's/(".*)sqlcipher3(.*")/\1sqlite3\2/g' "${FILE}"
+done
 
 #
 # Build pdo_sqlcipher
