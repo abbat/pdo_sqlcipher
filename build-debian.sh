@@ -309,3 +309,10 @@ rm -rf package/usr/bin
 rm -rf package/usr/lib
 rm -f  package/DEBIAN/md5sums
 
+echo "=============== All Done ====================="
+echo "Now run 'dpkg -i php5-sqlcipher.deb' to install"
+echo ""
+
+exit
+
+#EOF
