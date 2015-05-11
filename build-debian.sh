@@ -31,15 +31,14 @@ fi
 
 PHP_VER=$(${PHP_CONFIG} --version )
 PHP_API=$(${PHP_CONFIG} --phpapi )
+# There is prolly a better way to do this (getting the proper source pkg name):
+PHP_DEB_VER="$(dpkg-query -W -f='${Version}' php5)"
+PHP_SRC=php5-${PHP_DEB_VER%*-*}
 
 if [ "x${PHP_VER}" = "x" ]; then
 	echo "Error: unknown php version"
 	exit 1
 fi
-
-# There is prolly a better way to do this (getting the proper source pkg name):
-PHP_SRC1="$(dpkg-query -W -f='${Version}' php5)"
-PHP_SRC=php5-${PHP_SRC1%*-*}
 
 if [ ! -f "${PHP_SRC}" ]; then
 	apt-get source php5
@@ -258,7 +257,7 @@ fi
 LIBICU="$(dpkg-query -W -f='${Package}\n' libicu* | grep -v '\-')"
 LIBICU_VER="$(dpkg-query -W  -f='${Version}' $LIBICU)"
 
-sed -i "s/_PHP_VER/$PHP_VER/g;s/_PHP_API/$PHP_API/g;s/_LIBICU_VER/$LIBICU_VER/g;s/_LIBICU/$LIBICU/g" package/DEBIAN/control
+sed -i "s/_PHP_DEB_VER/$PHP_DEB_VER/g;s/_PHP_VER/$PHP_VER;s/_PHP_API/$PHP_API/g;s/_LIBICU_VER/$LIBICU_VER/g;s/_LIBICU/$LIBICU/g" package/DEBIAN/control
 
 mkdir -p package/usr/bin
 if [ $? -ne 0 ]; then
