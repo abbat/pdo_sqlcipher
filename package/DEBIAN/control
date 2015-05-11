@@ -1,9 +1,9 @@
 Package: php5-sqlcipher
-Version: 5.4.4-14
+Version: _PHP_VER
 Architecture: amd64
 Maintainer: Anton Batenev <antonbatenev@yandex.ru>
 Installed-Size: 350
-Depends: libc6 (>= 2.13-38), libssl1.0.0 (>=1.0.1e-2), libicu48 (>=4.8.1.1-12), phpapi-20100525, php5-common (= 5.4.4-14)
+Depends: libc6 (>= 2.13-38), libssl1.0.0 (>=1.0.1e-2), _LIBICU (>=_LIBICU_VER), phpapi-_PHP_API, php5-common (= _PHP_VER)
 Section: php
 Priority: optional
 Homepage: https://github.com/abbat/pdo_sqlcipher
