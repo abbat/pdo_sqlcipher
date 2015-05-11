@@ -37,8 +37,9 @@ if [ "x${PHP_VER}" = "x" ]; then
 	exit 1
 fi
 
+# There is prolly a better way to do this (getting the proper source pkg name):
 PHP_SRC1="$(dpkg-query -W -f='${Version}' php5)"
-PHP_SRC=${PHP_SRC1%*-*}
+PHP_SRC=php5-${PHP_SRC1%*-*}
 
 if [ ! -f "${PHP_SRC}" ]; then
 	apt-get source php5
