@@ -16,6 +16,8 @@ if test "$PHP_PDO_SQLCIPHER" != "no"; then
         pdo_inc_path=$abs_srcdir/ext
     elif test -f $abs_srcdir/ext/pdo/php_pdo_driver.h; then
         pdo_inc_path=$abs_srcdir/ext
+    elif test -f $phpincludedir/ext/pdo/php_pdo_driver.h; then
+        pdo_inc_path=$phpincludedir/ext
     elif test -f $prefix/include/php/ext/pdo/php_pdo_driver.h; then
         pdo_inc_path=$prefix/include/php/ext
     elif test -f $prefix/include/php5/ext/pdo/php_pdo_driver.h; then
