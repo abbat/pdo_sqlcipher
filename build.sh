@@ -38,8 +38,8 @@ if [ "x${PHP_CONFIG}" = "x" ]; then
 	exit 1
 fi
 
-# 5.3.3-7+squeeze13
 PHP_VER=$(${PHP_CONFIG} --version | cut -d '-' -f 1)
+PHP_MAJOR_VER=${PHP_VER:0:1}
 
 if [ "x${PHP_VER}" = "x" ]; then
 	echo "Error: unknown php version"
@@ -50,7 +50,7 @@ PHP_SRC="php-${PHP_VER}"
 PHP_TGZ="${PHP_SRC}.tar.gz"
 
 if [ ! -f "${PHP_TGZ}" ]; then
-	wget "http://museum.php.net/php5/${PHP_TGZ}"
+	wget "http://museum.php.net/php${PHP_MAJOR_VER}/${PHP_TGZ}"
 	if [ $? -ne 0 ]; then
 		# newest version?
 		wget -O "${PHP_TGZ}" "http://ru2.php.net/get/${PHP_TGZ}/from/this/mirror"
